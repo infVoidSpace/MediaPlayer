@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block brand %}
+    Upload
+{% endblock %}
+{% block title %}
+    Upload
+{% endblock %}
+
+{% block main %}
+
+
+    <div class="jumbotron bg-dark" style="background-color:rgba(41, 41, 41, 0.579)">
+        <h3 class="mb-3" style="color:rgba(255, 255, 255, 0.68)">Upload your favorite songs</h3>
+        <hr style="color:rgba(255, 255, 255, 0.68)">
+
+        <p style="color:rgba(255, 255, 255, 0.68)">Here you can add to the online library, you can upload only <b>mp3 / wav</b> files.<br>Note that you can upload any number of files and non-media files will be ignored.</p>
+        <form action="/upload" enctype="multipart/form-data" method="POST" >
+            <div class="custom-file my-3  mx-auto d-block w-50">
+              <input type="file" name="files[]" class="custom-file-input" aria-label="Upload" id="customFile" multiple=True>
+			  <label class="custom-file-label" for="customFile">Choose file</label>			  
+            </div class="d-block ">
+              <input class="btn btn-secondary" type="submit" value="Submit">
+        </form>
+</div>	
+
+		<script>
+		// Add the following code if you want the name of the file appear on select
+		$(".custom-file-input").on("change", function() {
+		  var fileName = $(this).val().split("\\").pop();
+		  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+		});
+		</script>
+		
+{% if uploadSuccess or uploadAbort %}
+{% if uploadSuccess  %}
+        <button class="btn-success btn mb-2" disabled>upload successful</button>
+{% endif %}
+		<table class="table table-sm table-active table-bordered ">
+			<tr scope="row" class="border"> <th>filename</th> <th>status </th> </tr>
+{% for filename in uploadSuccess: %}
+			<tr scope="row" class="table-success"><td>{{filename}}</td> <td>successful</td></tr>
+{% endfor %}
+{% for filename in uploadAbort: %}
+			<tr scope="row" class="table-danger"><td>{{filename}}</td> <td>aborted</td></tr>
+{% endfor %}
+		</table>
+{% endif %}
+
+{% endblock %}

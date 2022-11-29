@@ -1,0 +1,130 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+
+{% endblock %}
+
+{% block brand %}
+    Player
+{% endblock %}
+{% block title %}
+    Player
+{% endblock %}
+
+{% block main %}
+<script src="static/player_functions.js" type="text/javascript"> </script>
+
+<script>
+
+    $(".btn").mouseup(function(){
+    $(this).blur();
+})
+
+window.addEventListener('load', function() {
+  console.log('page is fully loaded');
+  init_playlist(customJsonify());
+});
+
+function customJsonify(){
+	var playlist_JSON ="{" ;
+	{% for key in session.playlist %}
+		song_id = "\"songId_{{ session.playlist[key]['song_id'] }}\"";
+		filename= "\"{{ session.playlist[key]['filename'] }}\"";
+		{% if song_id!="" and filename!="" %}
+			playlist_JSON += "\"{{key}}\"" + ":" + song_id +", "+song_id + ":" + filename + ",";
+		{% else %}
+			alert("Playlist Data Error"+song_id+filename,500)
+			return
+		{% endif %}
+	{% endfor %}
+	playlist_JSON=playlist_JSON.substr(0, playlist_JSON.length-1)
+	playlist_JSON += "}";
+	console.log(playlist_JSON)
+	return String(playlist_JSON)
+}
+
+</script>
+
+<div id="customPlayer" class="bg-dark w-50 m-auto p-2" style="border-radius:20px;">
+	
+	<audio src="" controls id="player" class="d-none">your browser does not support the HTML audio tag</audio>
+	
+	
+	<div class="d-flex">
+	<h5 id='playing_status' class="d-inline float-left mx-3 my-2 text-white"> off </h5>
+	<h5 id='playing_title' class="d-inline float-right mx-3 my-2 text-white">  </h5>
+	</div >
+	<hr>
+	
+	<div class="">
+		<div id="timer" class="d-inline text-white">
+			<span id="currentTime" class="">00:00 </span>/<span id="duration"> 00:00</span>
+		</div>
+		
+		<div id="progress" class="progress mx-2">
+			<input class="progress-bar bg-secondary" type=range value=rangeBar style="display:none" >
+			<div id="progress-bar" class="progress-bar bg-secondary" style="width:0%"></div>
+		</div>
+	</div>
+	<div class=" mx-0 my-2 p-0  d-flex">
+		<button class="btn btn-dark flex-fill" onmouseup="blur()" onclick="play()"><i class="fas fa-play"></i> / <i class="fas fa-pause"></i></button>
+		<button class="btn btn-dark flex-fill" onmouseup="blur()" onclick="previous()"><i class="fas fa-chevron-left"></i></button>
+		<button class="btn btn-dark flex-fill" onmouseup="blur()" onclick="next()"><i class="fas fa-chevron-right"></i></button>
+		<button class="btn btn-dark flex-fill" onmouseup="blur()" onclick="stop()"><i class="fas fa-stop"></i></button>
+		<button class="btn btn-dark flex-fill" onmouseup="blur()" onclick="abort()"><i class="fas fa-power-off"></i></button>
+	</div>
+</div>
+
+<table class="table table-hover table-sm table-dark ">
+<h3>your playlist</h3>
+<thead>
+<tr>
+  <th scope="col"> play </th>
+  <th scope="col"> Track </th>
+  <th scope="col"> Title </th>
+  <th scope="col"> Album </th>
+  <th scope="col"> Artist</th>  
+  <th scope="col"> Genre </th>
+  <th scope="col"> remove from playlist</th>
+</tr>
+</thead>
+
+{% for track_key in session.playlist %}
+
+	{% set track=session.playlist[track_key] %}
+<tr scope="row">
+  <td>
+     <input type="button" class="btn btn-dark btn-sm" value="play" id="play_{{track['song_id']}}" onmouseup="blur()" onclick=play("{{track['filename']}}",true)>   
+  </td>
+  <td>
+	{{ track["track_num"] }}
+  </td>
+  <td>
+	{{ track["title"] }}
+  </td>
+  <td>
+	{{ track["album"] }}
+  </td>
+  <td>
+	{{ track["artist"] }}
+  </td>
+  <td>
+    {{ track["genre"] }}
+  </td>
+  <td>
+	<form action="/removeFromPlaylist" method="POST">
+		<input name="remove_song" value='{{track["song_id"]}}' hidden>
+		<button type="submit" class="btn btn-dark btn-sm" onclick="del({{track_key}})">
+	<i class="fas fa-trash-alt"></i> 
+  </td>
+  
+</tr>
+
+{% endfor %}
+
+</table>
+<p id="p"></p>
+
+{% endblock %}

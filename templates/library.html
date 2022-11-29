@@ -1,0 +1,122 @@
+{% extends "layout.html" %}
+{% block head %}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+
+{% endblock %}
+{% block brand %}
+    Library
+{% endblock %}
+{% block title %}
+    Library
+{% endblock %}
+
+{% block main %}
+
+<h3> {{username}}'s library:</h3>
+<table class="table table-hover table-sm table-dark ">
+<thead >
+<tr>
+  <th scope="col"> add to playlist </th>
+  <th scope="col"> Title </th>
+  <th scope="col"> Artist</th>  
+  <th scope="col"> Album </th>
+  <th scope="col"> Track </th>
+  <th scope="col"> Genre </th>
+  <th scope="col"> delete </th>
+</tr>
+</thead>
+
+{% for row in songs: %}
+
+{% if row["user_id"]==session.user_id: %}
+
+<tr scope="row">
+  <td>
+    <form action="/addtoplaylist" method="POST">
+      <input name="add_playlist" value='{{row["song_id"]}}' hidden>
+	  <input type="submit" class="btn btn-dark btn-sm" value="+">
+	</form>
+  </td>
+  <td>
+    {{ row["title"] }}
+  </td>
+  <td>
+  {{ row["artist"] }}
+  </td>
+  <td>
+    {{ row["album"] }}
+  </td>
+  <td>
+  {{ row["track_num"] }}
+  </td>
+  <td>
+    {{ row["genre"] }}
+  </td>
+  <td>
+    <form action="/deletefile" method="POST">
+      <input name="delete_song" value='{{row["song_id"]}}' hidden>
+	  <button type="submit" class="btn btn-dark btn-sm">
+	  <i class="fas fa-trash"></i>
+    <!-- <button type="submit" class="btn btn-dark btn-sm">
+      <i class="fas fa-trash-alt"></i>  -->
+	</form>
+  </td>
+  
+</tr>
+
+{% endif %}
+
+{% endfor %}
+
+</table>
+
+<h3> General library (uploaded by other people):</h3>
+<table class="table table-hover table-sm table-dark ">
+<thead >
+<tr>
+  <th scope="col"> add to playlist </th>
+  <th scope="col"> Title </th>
+  <th scope="col"> Artist</th>  
+  <th scope="col"> Album </th>
+  <th scope="col"> Track </th>
+  <th scope="col"> Genre </th>
+
+</tr>
+</thead>
+
+{% for row in songs: %}
+
+{% if row["user_id"]!=session.user_id: %}
+
+<tr scope="row">
+  <td>
+    <form action="/addtoplaylist" method="POST">
+      <input name="add_playlist" value='{{row["song_id"]}}' hidden>
+	  <input type="submit" class="btn btn-dark btn-sm" value="+">
+	</form>
+  </td>
+  <td>
+    {{ row["title"] }}
+  </td>
+  <td>
+  {{ row["artist"] }}
+  </td>
+  <td>
+    {{ row["album"] }}
+  </td>
+  <td>
+  {{ row["track_num"] }}
+  </td>
+  <td>
+    {{ row["genre"] }}
+  </td>
+  
+</tr>
+
+{% endif %}
+
+{% endfor %}
+
+</table>
+{% endblock %}

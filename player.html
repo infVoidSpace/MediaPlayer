@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<script>
+function play(filename):{
+	player=document.getElementById("player")
+	player.src={{ config.UPLOAD_FOLDER }}+String(filename)
+}
+</script>
+
+{% endblock %}
+
+{% block brand %}
+    Player
+{% endblock %}
+{% block title %}
+    Player
+{% endblock %}
+
+{% block main %}
+
+<audio controls id="player">
+
+<table class="table table-hover table-sm table-dark ">
+<thead >
+<tr>
+  <th scope="col"> play </th>
+  <th scope="col"> Track </th>
+  <th scope="col"> Title </th>
+  <th scope="col"> Album </th>
+  <th scope="col"> Artist</th>  
+  <th scope="col"> Genre </th>
+  <th scope="col"> delete </th>
+</tr>
+</thead>
+
+{% for track_key in session.playlist: %}
+
+{{ track=session.playlist[track_key] }}
+<tr scope="row">
+  <td>
+    <input type="submit" class="btn btn-dark btn-sm" value="play" id="play_{{track['song_id']}}" onclick="play({{track['filename']}})">
+  </td>
+  <td>
+	{{ track["track_num"] }}
+  </td>
+  <td>
+	{{ track["title"] }}
+  </td>
+  <td>
+	{{ track["album"] }}
+  </td>
+  <td>
+	{{ track["artist"] }}
+  </td>
+  <td>
+    {{ track["genre"] }}
+  </td>
+  <td>
+    todo
+  </td>
+  
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}

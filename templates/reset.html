@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block brand %}
+    reset password
+{% endblock %}
+{% block title %}
+    reset password
+{% endblock %}
+{% block main %}
+
+{% if just_entered or notApproved %}
+<h3>enter an username and email address:</h3><br>
+<form action="/resetpassword" method="POST">
+  <div class="container g-0">
+    <div class="form-group ">
+      <div class="form-row g-0">
+
+        <div class="col-3 col-sm-3 align-self-center">
+          <label for="e_name" class="align-item-start">Email:   </label>
+        </div>
+
+        <div class="col-3 col-sm-3 pr-1">
+          <input required class="form-control" name="e_name" id="e_name" placeholder="Email name" type="text">
+        </div>
+        <div class="col-3 col-sm-3 input-group pl-0">
+          <div class="input-group-prepend">
+            <div class="input-group-text">@</div>
+          </div>
+          <input required class="form-control" name="e_host" value="gmail.com" type="text">
+        </div>
+
+      </div>
+        <div class="form-row">
+        <div class="col-3 col-sm-3 align-self-center">
+          <label class="align-item-start" for="username">Username:</label>
+        </div>
+        <div class="col-6 col-sm-3 mb-2">
+          <input required class="form-control" name="username" id="username" placeholder="Username" type="text">
+        </div>
+
+      </div>
+      <div class="form-row">
+        <div class="col align-self-center">
+          <input class="btn btn-primary" type="submit" value="Send me a confirmation Email">
+        </div>
+</div>
+</form>
+<br/>
+{% if notApproved %}
+	<small class="form-text text-danger mb-3"><b>Wrong Username/Email!</b></small>
+{% endif %}
+{% endif %}
+
+{% if approved: %}
+
+<div class=container >
+
+<form action="/resetpassword_pin" method="POST">
+  <h4> An email has been sent to your account with a password, enter it here:</h4>
+  <input required name=pin type=text class="form-control form-control-lg align-self-center mb-2"><br/>
+  <input type=submit class="btn btn-primary" value=Submit>
+</form>
+</div>
+
+{% endif %}
+
+{% if new_password_entry %}
+<div class=container >
+
+<form action="/newpassword" method="POST">
+  <h4> Enter your new password:</h4>
+<input required class="form-control" name="password" placeholder="Password" type="password" >
+{% if badPassword: %}
+  <small class="form-text text-danger mb-3"><b>password needs to be at least 8 English alpha-numerical characters long
+                                                             and have both upper and lowercase letters</b></small>
+{% endif %}
+<input required class="form-control" name="confirmation" placeholder="Password Confirmation" type="password">
+{% if badConfirmation: %}
+  <small class="form-text text-danger mb-3"><b>Password confirmation didn't match</b></small>
+{% endif %}
+<input type=submit class="btn btn-primary" value=Submit>
+</form>
+</div>
+
+{% endif %}
+{% if new_password_approved: %}
+  <h4>Password has been changed!<br/> you can login now </h4>
+
+{% endif %}
+{% endblock %}

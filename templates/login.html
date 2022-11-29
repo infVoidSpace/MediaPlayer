@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block brand %}
+    Log In
+{% endblock %}
+{% block title %}
+    Log In
+{% endblock %}
+{% block main %}
+    <h2 class="center pb-2">Login:</h2>
+    <form action="/login" method="POST">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
+			{% if NoUsername: %}
+				<small class="form-text text-danger mb-3"><b>Enter username!</b></small>
+			{% endif %}
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="password" placeholder="Password" type="password">
+			{% if NoPassword: %}
+				<small class="form-text text-danger mb-3"><b>Enter Password!</b></small>
+			{% endif %}
+			
+        </div>
+		{% if BadPassword: %}
+			<small class="form-text text-danger mb-3"><b>Wrong Username/Password!</b></small>
+		{% endif %}
+        <button class="btn btn-primary" type="submit">Log In</button>
+    </form>
+    <a href='/resetpassword'>reset pasword</a>
+{% endblock %}
